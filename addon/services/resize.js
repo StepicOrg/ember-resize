@@ -10,6 +10,8 @@ import EmberObject, { set, getWithDefault } from '@ember/object';
 const Base = Service || EmberObject;
 const keys = Object.keys || emberKeys;
 
+const IS_FASTBOOT = (typeof FastBoot !== 'undefined');
+
 export default Base.extend(Evented, {
   _oldWidth: null,
   _oldHeight: null,
@@ -60,11 +62,15 @@ export default Base.extend(Evented, {
   },
 
   _installResizeListener() {
-    window.addEventListener('resize', this._onResizeHandler);
+    if(!IS_FASTBOOT) {
+      window.addEventListener('resize', this._onResizeHandler);
+    }
   },
 
   _uninstallResizeListener() {
-    window.removeEventListener('resize', this._onResizeHandler);
+    if(!IS_FASTBOOT) {
+      window.removeEventListener('resize', this._onResizeHandler);
+    }
   },
 
   _fireResizeNotification(evt) {
